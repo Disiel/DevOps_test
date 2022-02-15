@@ -1,0 +1,9 @@
+---
+
+- hosts: FLASKEX_type
+  roles:
+#   - roles/preparing_servers
+    - roles/flaskex
+
+
+

@@ -1,0 +1,58 @@
+---
+- name: "Set timezone"
+  community.general.timezone:
+    name: Europe/Moscow
+
+- name: "Generated locale"
+  community.general.locale_gen:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ locale_gen_list }}"
+  notify:
+    - generated_locale
+
+- name: "Set locale default"
+  ansible.builtin.lineinfile:
+    path: /etc/default/locale
+    regexp: "^LANG="
+    line: "LANG={{ locales_default }}"
+  notify:
+    - generated_locale
+
+- name: Changing hostname to match inventory_hostname_short
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname_short }}"
+  register: "hostname_status"
+  become: true
+  when: ansible_hostname != inventory_hostname_short
+
+- name: "Install software"
+  ansible.builtin.apt:
+    name: "{{ install_software_list }}"
+    state: present
+
+- name: "Add SSH login password"
+  ansible.builtin.replace:
+    path: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication no$"
+    replace: "PasswordAuthentication yes"
+
+- name: "SSH restart"
+  ansible.builtin.systemd:
+    name: ssh
+    state: restarted
+
+- name: "Add user sudo"
+  ansible.builtin.user:
+    name: "{{ item }}"
+    password: "{{ add_root_userpass_hash }}"
+    group: sudo
+    shell: /bin/bash
+    update_password: on_create
+  with_items: "{{ add_root_username_list }}"
+
+- name: "Add authorized key one"
+  ansible.posix.authorized_key:
+    user: one
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+    state: present

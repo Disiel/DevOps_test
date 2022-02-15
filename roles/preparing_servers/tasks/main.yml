@@ -1,0 +1,10 @@
+---
+- name: "Include tasks server_update.yml"
+  ansible.builtin.import_tasks: server_update.yml
+
+- name: "Include tasks server_settings.yml"
+  ansible.builtin.import_tasks: server_settings.yml
+
+- name: "Include tasks add_deploy.yml"
+  ansible.builtin.import_tasks: add_deploy.yml
+

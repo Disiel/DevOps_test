@@ -1,0 +1,23 @@
+---
+
+- name: "Create path projects"
+  file:
+    path: /srv/projects/
+    state: directory
+    owner: deploy
+    group: deploy
+
+- name: "git clone https://github.com/anfederico/Flaskex"
+  ansible.builtin.git:
+    repo: 'https://github.com/anfederico/flaskex.git'
+    dest: /srv/projects
+
+- name: "Install specified python requirements"
+  ansible.builtin.pip:
+    requirements: /srv/projects/requirements.txt
+    executable: pip
+
+- name: "Run a script using an executable in a system path"
+  ansible.builtin.shell:
+    cmd: nohup python app.py </dev/null >/dev/null 2>&1 &
+    chdir: /srv/projects/

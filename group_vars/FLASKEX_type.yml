@@ -1,0 +1,10 @@
+---
+# Global vars for FLASKEX_type servers DEV.contour
+
+ansible_user: ubuntu
+ansible_ssh_private_key_file: /home/disiel/.ssh/id_rsa
+ansible_python_interpreter: /usr/bin/python3
+become: True
+become_method: sudo
+become_user: root
+remote_user: ubuntu

@@ -1,0 +1,3 @@
+---
+- name: generated_locale
+  ansible.builtin.command: dpkg-reconfigure -f noninteractive locales

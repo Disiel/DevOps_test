@@ -1,0 +1,33 @@
+---
+- name: "Add group deploy"
+  ansible.builtin.group:
+    name: deploy
+
+- name: "Add www-data in groups deploy"
+  ansible.builtin.user:
+    name: www-data
+    groups: www-data,deploy
+
+- name: "Add user deploy"
+  ansible.builtin.user:
+    name: deploy
+    uid: 8008
+    password_lock: true
+    groups: www-data,deploy
+    shell: /bin/bash
+    update_password: on_create
+
+- name: "Create ssh authorized_keys path"
+  ansible.builtin.file:
+    path: /home/deploy/.ssh/
+    state: directory
+    owner: deploy
+    group: deploy
+
+- name: "Add ssh key deploy"
+  ansible.builtin.template:
+    src: templates/authorized_keys.j2
+    dest: /home/deploy/.ssh/authorized_keys
+    owner: deploy
+    group: deploy
+    mode: "0600"

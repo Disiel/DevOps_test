@@ -1,0 +1,18 @@
+---
+- name: "Update apt cache"
+  ansible.builtin.apt:
+    update_cache: true
+  when: ansible_os_family == "Debian"
+  tags: [never, server-update]
+
+- name: "Upgrade packages"
+  ansible.builtin.apt:
+    upgrade: dist
+  when: ansible_os_family == "Debian"
+  tags: [never, server-update]
+
+- name: "Reboot servers"
+  ansible.builtin.reboot:
+    post_reboot_delay: 15
+    reboot_timeout: 3600
+  tags: [never, server-update]
