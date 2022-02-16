@@ -1,5 +1,5 @@
 ---
-# Global vars for FLASKEX_type servers DEV.contour
+# Global vars for FLASKEX_type
 
 ansible_user: ubuntu
 ansible_ssh_private_key_file: /home/disiel/.ssh/id_rsa
